@@ -236,10 +236,12 @@ class MailThread(orm.Model):
     def message_parse(
         self, cr, uid, message, save_original=False, context=None
     ):
+
         if context is None:
             context = {}
         context['main_message_id'] = False
         context['pec_type'] = False
+
         if not self.is_server_pec(cr, uid, context=context):
             return super(MailThread, self).message_parse(
                 cr, uid, message, save_original=save_original, context=context)
@@ -248,13 +250,12 @@ class MailThread(orm.Model):
         daticert_dict = {}
         parts = {}
         num = 0
-        parts = self._get_msg_payload(cr, uid, message,
-                                      parts=parts, num=num)
+        parts = self._get_msg_payload(cr, uid, message, parts=parts, num=num)
         daticert = 'daticert.xml' in parts and parts['daticert.xml'] or None
         postacert = 'postacert.eml' in parts and parts['postacert.eml'] or None
+
         if daticert:
-            daticert_dict = self.parse_daticert(
-                cr, uid, daticert, context=context)
+            daticert_dict = self.parse_daticert(cr, uid, daticert, context=context)
         else:
             if 'To' not in parts and 'Msg_ID' not in parts:
                 raise orm.except_orm(
@@ -266,6 +267,7 @@ class MailThread(orm.Model):
                 daticert_dict['pec_msg_id'] = message['Message-ID']
                 daticert_dict['err_type'] = 'no-dest'
                 daticert_dict['email_from'] = message['From']
+
         if daticert_dict.get('pec_type') == 'posta-certificata':
             if not postacert:
                 raise orm.except_orm(
@@ -280,27 +282,16 @@ class MailThread(orm.Model):
             msg_dict = super(MailThread, self).message_parse(
                 cr, uid, message, save_original=True,
                 context=context)
-            if daticert_dict.get('pec_type') in \
-                    ('avvenuta-consegna', 'errore-consegna'):
-                msg_dict['body'], attachs = \
-                    self._message_extract_payload_receipt(
-                    message,
-                    save_original=save_original)
+            if daticert_dict.get('pec_type') in ('avvenuta-consegna', 'errore-consegna'):
+                msg_dict['body'], attachs = self._message_extract_payload_receipt(message, save_original=save_original)
+
         msg_dict.update(daticert_dict)
         msg_ids = []
-        if (
-            daticert_dict.get('message_id') and
-            (
-                daticert_dict.get('pec_type') != 'posta-certificata')
-        ):
-            msg_ids = message_pool.search(
-                cr, uid, [('message_id', '=', daticert_dict['message_id'])],
-                context=context)
+
+        if (daticert_dict.get('message_id') and (daticert_dict.get('pec_type') != 'posta-certificata')):
+            msg_ids = message_pool.search(cr, uid, [('message_id', '=', daticert_dict['message_id'])], context=context)
             if len(msg_ids) > 1:
-                raise orm.except_orm(
-                    _('Error'),
-                    _('Too many existing mails with message_id %s')
-                    % daticert_dict['message_id'])
+                raise orm.except_orm( _('Error'), _('Too many existing mails with message_id %s') % daticert_dict['message_id'])
             if msg_ids:
                 # I'm going to set this message as notification of the original
                 # message and remove the message_id of this message
@@ -320,10 +311,7 @@ class MailThread(orm.Model):
                                    '=',
                                    daticert_dict.get('recipient_addr'))
                                   )
-                chk_msgids = message_pool.search(
-                    cr, uid,
-                    domain,
-                    context=context)
+                chk_msgids = message_pool.search(cr, uid, domain, context=context)
                 if not chk_msgids:
                     context['main_message_id'] = msg_ids[0]
                     context['pec_type'] = daticert_dict.get('pec_type')
@@ -332,10 +320,7 @@ class MailThread(orm.Model):
         # transport error , marks in original message with
         # error, and after the server not save the original message
         # because is duplicate
-        if (
-            daticert_dict.get('message_id') and
-            message['X-Trasporto'] == 'errore'
-        ):
+        if (daticert_dict.get('message_id') and message['X-Trasporto'] == 'errore'):
             msg_ids = message_pool.search(
                 cr, uid, [('message_id', '=', daticert_dict['message_id'])],
                 context=context)
@@ -346,10 +331,7 @@ class MailThread(orm.Model):
                     % daticert_dict['message_id'])
             else:
                 message_pool = self.pool['mail.message']
-                message_pool.write(
-                    cr, uid, msg_ids, {
-                        'error': True,
-                    }, context=context)
+                message_pool.write(cr, uid, msg_ids, {'error': True,}, context=context)
 
         author_id = self._FindOrCreatePartnersPec(
             cr, uid, message, daticert_dict.get('email_from'), context=context)
