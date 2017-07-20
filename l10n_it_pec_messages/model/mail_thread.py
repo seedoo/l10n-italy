@@ -18,6 +18,7 @@ from openerp.osv import orm
 from openerp import api, tools
 from openerp.tools.translate import _
 import xml.etree.ElementTree as ET
+from datetime import datetime
 
 
 class MailThread(orm.Model):
@@ -51,6 +52,8 @@ class MailThread(orm.Model):
         msg_dict = {}
         root = ET.fromstring(daticert)
         message = None
+        cert_giorno = None
+        cert_ora = None
         if 'tipo' in root.attrib:
             msg_dict['pec_type'] = root.attrib['tipo']
         if 'errore' in root.attrib:
@@ -66,12 +69,22 @@ class MailThread(orm.Model):
                         msg_dict['message_id'] = child2.text
                     if child2.tag == 'identificativo':
                         msg_dict['pec_msg_id'] = child2.text
+                    if child2.tag == 'data':
+                        for child3 in child2:
+                            if child3.tag == 'giorno':
+                                cert_giorno = child3.text
+                            if child3.tag == 'ora':
+                                cert_ora = child3.text
                     if child2.tag == 'consegna':
                         recipient_id = self._FindPartnersPec(
                             cr, uid, message, child2.text, context=context)
                         if recipient_id:
                             msg_dict['recipient_id'] = recipient_id
                         msg_dict['recipient_addr'] = child2.text
+
+        if cert_giorno and cert_ora:
+            cert_time = datetime.strptime(cert_giorno + " " + cert_ora, "%d/%m/%Y %H:%M:%S")
+            msg_dict['cert_datetime'] = cert_time
         return msg_dict
 
     def _get_msg_anomalia(self, msg):
