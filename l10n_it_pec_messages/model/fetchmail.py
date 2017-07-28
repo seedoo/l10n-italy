@@ -39,3 +39,8 @@ class FetchmailServer(models.Model):
         help="If checked then if there is no partner"
              " to link a fetched mail with,"
              "the system creates a contact partner")
+
+    def get_fetch_server_pec(self, cr, uid, context=None):
+        cr.execute("SELECT distinct server_id from fetchmail_server_user_rel where user_id = " + str(uid))
+        server_ids = cr.dictfetchall()
+        return server_ids

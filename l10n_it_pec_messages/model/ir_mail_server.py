@@ -31,3 +31,13 @@ class IrMailServer(models.Model):
         ('incomingserver_name_unique', 'unique(in_server_id)',
          'Incoming Server already in use'),
         ]
+
+    def get_mail_server_pec(self, cr, uid, fetch_server_id, context=None):
+        mail_server_obj = self.pool.get('ir.mail_server')
+        mail_server_ids = mail_server_obj.search(cr, uid,
+                                                 [('in_server_id',
+                                                   '=',
+                                                   fetch_server_id["server_id"])]
+                                                 )
+        return mail_server_ids
+
