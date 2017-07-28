@@ -37,7 +37,7 @@ class IrMailServer(models.Model):
         mail_server_ids = mail_server_obj.search(cr, uid,
                                                  [('in_server_id',
                                                    '=',
-                                                   fetch_server_id["server_id"])]
+                                                   fetch_server_id)]
                                                  )
         return mail_server_ids
 

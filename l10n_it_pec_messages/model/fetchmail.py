@@ -41,6 +41,5 @@ class FetchmailServer(models.Model):
              "the system creates a contact partner")
 
     def get_fetch_server_pec(self, cr, uid, context=None):
-        cr.execute("SELECT distinct server_id from fetchmail_server_user_rel where user_id = " + str(uid))
-        server_ids = cr.dictfetchall()
+        server_ids = self.search(cr, uid, [('user_ids', '=', uid)])
         return server_ids
