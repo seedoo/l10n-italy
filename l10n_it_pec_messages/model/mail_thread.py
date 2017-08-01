@@ -170,6 +170,10 @@ class MailThread(orm.Model):
                     'text/rfc822-headers':
                 parts['To'], parts['Msg_ID'] = \
                     self._get_msg_anomalia(part)
+            elif num > 1 and part.get_content_type() == \
+                    'message/rfc822':
+                parts['To'], parts['Msg_ID'] = \
+                    self._get_msg_anomalia(part)
             # If no rfc822-headers than get info from original daticert.xml
             elif 'report' in parts and 'Msg_ID' not in parts and \
                     'daticert.xml' not in parts and \
