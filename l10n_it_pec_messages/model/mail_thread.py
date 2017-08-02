@@ -20,6 +20,10 @@ from openerp.tools.translate import _
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 
+
+def decode_header(message, header, separator=' '):
+    return separator.join(map(decode, filter(None, message.get_all(header, []))))
+
 class MailThread(orm.Model):
     _inherit = 'mail.thread'
 
@@ -341,7 +345,8 @@ class MailThread(orm.Model):
         # transport error , marks in original message with
         # error, and after the server not save the original message
         # because is duplicate
-        if (daticert_dict.get('message_id') and message['X-Trasporto'] == 'errore'):
+        # if (daticert_dict.get('message_id') and message['X-Trasporto'] == 'errore'):
+        if (daticert_dict.get('message_id') and daticert_dict['err_type']=='no-dest'):
             msg_ids = message_pool.search(
                 cr, uid, [('message_id', '=', daticert_dict['message_id'])],
                 context=context)
@@ -422,3 +427,20 @@ class MailThread(orm.Model):
             subtype=subtype, parent_id=parent_id,
             attachments=attachments, context=context,
             content_subtype=content_subtype, **kwargs)
+
+    def message_route(self, cr, uid, message, message_dict, model=None, thread_id=None,
+                      custom_values=None, context=None):
+        self.fix_headers_legalmail_bounces(message)
+        return super(MailThread, self).message_route(cr, uid, message, message_dict, model, thread_id, custom_values, context)
+
+    # modifica due campi nelle notifiche di errore dei server di legalmail che diversamente verrebbero scartate dal sistema
+    def fix_headers_legalmail_bounces(self, message):
+        email_from = decode_header(message, 'From')
+        if email_from.__contains__("mailer-daemon@legalmail.it"):
+            fake_from = ('From', message['From'].replace('mailer-daemon', 'mailerdaemon'))
+            fake_content_type = ('Content-Type',message['Content-Type'].replace('Report', 'Mixed'))
+            message._headers = [i for i in message._headers if not i[0] == 'From' and not i[0] == 'Content-Type']
+            message._headers.append(fake_from)
+            message._headers.append(fake_content_type)
+        return message
+
