@@ -227,3 +227,27 @@ class MailMessage(orm.Model):
         else:
             return super(MailMessage, self).check_access_rule(
                 cr, uid, ids, operation, context=context)
+
+        cr.execute('SELECT DISTINCT id, model, res_id, pec_msg_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
+        for id, rmod, rid, pec_msg_id in cr.fetchall():
+            if pec_msg_id:
+                return super(orm.Model, self).check_access_rule(
+                    cr, uid, ids, operation, context=context)
+        return super(MailMessage, self).check_access_rule(
+            cr, uid, ids, operation, context=context)
+        # if self._check_context_pec(context):
+        #     return super(orm.Model, self).check_access_rule(
+        #         cr, uid, ids, operation, context=context)
+        # else:
+        #     return super(MailMessage, self).check_access_rule(
+        #         cr, uid, ids, operation, context=context)
+
+
+    def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
+        if values['author_id'] == 1:
+            values['author_id'] = False
+        res = super(MailMessage, self).create(cr, uid, values, context=context)
+        return res
+
