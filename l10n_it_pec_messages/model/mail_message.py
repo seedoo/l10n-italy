@@ -13,8 +13,10 @@
 
 from openerp.osv import fields, orm
 from email.utils import getaddresses
+from openerp import SUPERUSER_ID
 
 import logging
+
 
 _logger = logging.getLogger(__name__)
 
@@ -218,15 +220,21 @@ class MailMessage(orm.Model):
                 context=context, count=count,
                 access_rights_uid=access_rights_uid)
 
+
+    def _check_context_pec(self, context):
+        if context and context.has_key('pec_messages') and context.get('pec_messages'):
+            return True
+        elif context.has_key('__contexts') and context.get('__contexts'):
+            subcontext_list = context.get('__contexts')
+            for subcontext in subcontext_list:
+                if self._check_context_pec(subcontext):
+                    return True
+        return False
+
+
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         if context is None:
             context = {}
-        if context.get('pec_messages'):
-            return super(orm.Model, self).check_access_rule(
-                cr, uid, ids, operation, context=context)
-        else:
-            return super(MailMessage, self).check_access_rule(
-                cr, uid, ids, operation, context=context)
 
         cr.execute('SELECT DISTINCT id, model, res_id, pec_msg_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
         for id, rmod, rid, pec_msg_id in cr.fetchall():
@@ -250,4 +258,3 @@ class MailMessage(orm.Model):
             values['author_id'] = False
         res = super(MailMessage, self).create(cr, uid, values, context=context)
         return res
-

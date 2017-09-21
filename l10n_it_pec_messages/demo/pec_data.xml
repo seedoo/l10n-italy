@@ -5,24 +5,39 @@
             <field name="groups_id" eval="[(4, ref('base.group_pec'))]"/>
         </record>
         <record model="fetchmail.server" id="imap_pec_server">
-            <field name="name">IMAP PEC server</field>
+            <field name="name">IMAP PEC DEMO Legal mail</field>
             <field name="type">imap</field>
+            <field name="server">mbox.cert.legalmail.it</field>
+            <field name="port">993</field>
+            <field name="user">flosslabtest@legalmail.it</field>
+            <field name="password">test12345</field>
+            <field name="is_ssl" eval="True"></field>
             <field name="pec" eval="True"></field>
             <field name="user_ids" eval="[(6, 0,[ref('base.user_root')])]"></field>
         </record>
         <record model="ir.mail_server" id="smtp_pec_server">
-            <field name="name">SMTP PEC server</field>
-            <field name="smtp_host">pechost</field>
+            <field name="name">SMTP PEC DEMO Legal mail</field>
+            <field name="smtp_host">sendm.cert.legalmail.it</field>
+            <field name="smtp_port">465</field>
+            <field name="smtp_user">flosslabtest@legalmail.it</field>
+            <field name="smtp_pass">test12345</field>
+            <field name="smtp_encryption">ssl</field>
             <field name="pec" eval="True"></field>
             <field name="in_server_id" ref="imap_pec_server"></field>
         </record>
 
         <record model="mail.alias" id="pec_user_alias">
-            <field name="alias_name">l.battistini</field>
+            <field name="alias_name">flosslabtest</field>
             <field name="alias_contact">partners</field>
             <field name="alias_user_id" eval="int(1)"></field>
             <field name="alias_force_thread_id" eval="int(1)"></field>
             <field model="ir.model" name="alias_model_id" search="[('model','ilike','res.users')]"/>
+        </record>
+
+        <record model="ir.cron" id="fetchmail.ir_cron_mail_gateway_action">
+            <field name="interval_number">5</field>
+            <field name="interval_type">hours</field>
+            <field name="active" eval="True"/>
         </record>
     </data>
 </openerp>

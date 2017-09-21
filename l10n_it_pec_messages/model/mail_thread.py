@@ -416,13 +416,13 @@ class MailThread(orm.Model):
             context = {}
         if 'reply_pec' in context and context['reply_pec']:
             return super(MailThread, self).message_post(
-                cr, uid, 0, body='',
+                cr, uid, 0, body=body,
                 subject=subject, type=type,
                 subtype=subtype, parent_id=parent_id,
                 attachments=attachments, context=context,
                 content_subtype=content_subtype, **kwargs)
         return super(MailThread, self).message_post(
-            cr, uid, thread_id, body='',
+            cr, uid, thread_id, body=body,
             subject=subject, type=type,
             subtype=subtype, parent_id=parent_id,
             attachments=attachments, context=context,
