@@ -314,7 +314,7 @@ class MailThread(orm.Model):
         msg_ids = []
 
         if (daticert_dict.get('message_id') and (daticert_dict.get('pec_type') != 'posta-certificata')):
-            msg_ids = message_pool.search(cr, uid, [('message_id', '=', daticert_dict['message_id'])], context=context)
+            msg_ids = message_pool.search(cr, uid, [('message_id', '=', daticert_dict['message_id']),('direction', '=', 'out')], context=context)
             if len(msg_ids) > 1:
                 raise orm.except_orm( _('Error'), _('Too many existing mails with message_id %s') % daticert_dict['message_id'])
             if msg_ids:
