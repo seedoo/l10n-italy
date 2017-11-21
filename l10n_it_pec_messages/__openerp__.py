@@ -24,25 +24,27 @@
 
 {
     "name": "Pec Messages",
-    "version": "8.0.1.0.0",
+    "version": "8.0.1.6.0",
     "author": "Agile Business Group, Odoo Community Association (OCA) - Innoviu Srl - Flosslab Srl",
     "category": "Certified Mailing",
     "website": "http://www.agilebg.com - http://www.innoviu.com - http://www.flosslab.com",
     "license": "AGPL-3",
-    'depends': [
-        'fetchmail', 'mail', 'l10n_it_pec',
+    "depends": [
+        "fetchmail",
+        "mail",
+        "l10n_it_pec"
     ],
-    'data': [
+    "data": [
         "security/mail_data.xml",
         "view/fetchmail_view.xml",
         "view/ir_mail_server.xml",
         "wizard/mail_compose_message_view.xml",
         "view/mail_view.xml",
         "view/res_users.xml",
-        "security/ir.model.access.csv",
+        "security/ir.model.access.csv"
     ],
-    'demo': [
-        'demo/pec_data.xml',
-        ],
-    'installable': True
+    "demo": [
+        "demo/pec_data.xml"
+    ],
+    "installable": True
 }
