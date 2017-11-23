@@ -96,6 +96,7 @@
                     <field name="email_from" />
                     <field name="date" />
                     <field name="subject" />
+                    <field name="pec_server_user" string="Account"/>
                 </tree>
             </field>
         </record>

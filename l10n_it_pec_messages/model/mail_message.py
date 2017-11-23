@@ -131,6 +131,8 @@ class MailMessage(orm.Model):
         'main_msg_virus_message_ids': fields.one2many(
             'mail.message', 'virus_message_id',
             'Main messages', readonly=True),
+        'pec_server_user': fields.related('server_id', 'user', type='char', readonly=True, string='Account'),
+
     }
 
     _defaults = {
