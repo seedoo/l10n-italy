@@ -13,6 +13,7 @@
 
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 
 
 class MailComposeMessage(osv.TransientModel):
@@ -69,13 +70,40 @@ class MailComposeMessage(osv.TransientModel):
             return super(MailComposeMessage, self).get_message_data(
                 cr, uid, message_id, context=context)
 
+    def _check_server_access(self, cr, uid, context=None):
+        if 'new_pec_mail' in context and context['new_pec_mail']:
+            user_ids = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid)
+
+            if len(user_ids.allowed_server_ids.ids) == 0:
+                raise osv.except_osv(_('Warning!'),
+                                     _("L'utente %s non e' associato a nessun PEC Server") % user_ids.name)
+
+            disabled_server_name = ""
+            all_server_disabled = True
+            for server in self.pool.get('fetchmail.server').browse(cr, SUPERUSER_ID, user_ids.allowed_server_ids.ids):
+                if server.pec == False:
+                    disabled_server_name += server.name + " "
+                else:
+                    all_server_disabled = False
+                    break
+
+            if all_server_disabled:
+                raise osv.except_osv(_('Warning!'),
+                                     _(
+                                         "Nessuno dei server a cui è associato l'utente (%s) è abilitato in modalità PEC Server") % disabled_server_name)
+
+            return True
+
     def get_record_data(self, cr, uid, values, context=None):
         """ Returns a defaults-like dict with initial values for the
         composition wizard when sending an email related a previous email
         (parent_id) or a document (model, res_id).
         This is based on previously computed default values. """
+
+        self._check_server_access(cr, uid, context)
         if context is None:
             context = {}
+
         result = super(MailComposeMessage, self).get_record_data(
             cr, uid, values, context=context)
         if 'reply_pec' in context and context['reply_pec']:
