@@ -256,7 +256,7 @@ class MailMessage(orm.Model):
     def create(self, cr, uid, values, context=None):
         if context is None:
             context = {}
-        if values['author_id'] == 1:
+        if 'author_id' in values and values['author_id'] == 1:
             values['author_id'] = False
         res = super(MailMessage, self).create(cr, uid, values, context=context)
         return res
