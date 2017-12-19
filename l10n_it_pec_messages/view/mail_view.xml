@@ -48,7 +48,7 @@
             <field name="model">mail.message</field>
             <field name="priority">100</field>
             <field name="arch" type="xml">
-                <form string="Pec" create="false" edit="false">
+                <form string="Pec" create="false" edit="false" delete="false">
                     <field name="email_from" readonly="1" />
                     <field name="date"  readonly="1" />
                     <field name="author_id"  />
@@ -92,7 +92,7 @@
             <field name="model">mail.message</field>
             <field name="priority">100</field>
             <field name="arch" type="xml">
-                <tree string="Pec" create="false">
+                <tree string="Pec" create="false" delete="false">
                     <field name="email_from" />
                     <field name="date" />
                     <field name="subject" />
