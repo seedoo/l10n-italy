@@ -16,7 +16,7 @@
                 <attribute name="attrs">{'invisible': [('pec','=',True)]}</attribute>
             </field>
             <notebook position="inside">
-                <page string="Configure allowed users">
+                <page string="Configure allowed users" attrs="{'invisible': [('pec','=',False)]}">
                      <field name="user_ids" />
                 </page>
             </notebook>

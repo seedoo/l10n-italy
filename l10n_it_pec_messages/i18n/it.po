@@ -92,7 +92,7 @@ msgstr "Massaggio Inviato"
 #. module: l10n_it_pec_messages
 #: field:mail.message,server_id:0
 msgid "Server Pec"
-msgstr "Server Pec in ingresso"
+msgstr "Server PEC in ingresso"
 
 #. module: l10n_it_pec_messages
 #: field:mail.message,ref_msg_id:0
@@ -114,7 +114,7 @@ msgstr ""
 #. module: l10n_it_pec_messages
 #: selection:mail.message,pec_type:0
 msgid "Pec Mail"
-msgstr "Pec Mail"
+msgstr "PEC Mail"
 
 #. module: l10n_it_pec_messages
 #: model:ir.model,name:l10n_it_pec_messages.model_mail_compose_message
@@ -144,7 +144,7 @@ msgstr "PEC server in ingresso"
 #. module: l10n_it_pec_messages
 #: field:fetchmail.server,user_ids:0
 msgid "Users allowed to use this server"
-msgstr "Utenti abilitati ad utilizzare questo server"
+msgstr "Utenti PEC Server"
 
 #. module: l10n_it_pec_messages
 #: field:res.users,allowed_server_ids:0
@@ -154,7 +154,7 @@ msgstr "Fetchmail servers abilitato per essere usato"
 #. module: l10n_it_pec_messages
 #: field:fetchmail.server,pec:0 field:ir.mail_server,pec:0
 msgid "Pec Server"
-msgstr "Pec Server"
+msgstr "PEC Server"
 
 #. module: l10n_it_pec_messages
 #: view:mail.message:0
