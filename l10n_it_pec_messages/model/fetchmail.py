@@ -19,7 +19,7 @@ class FetchmailServer(models.Model):
     _inherit = "fetchmail.server"
 
     pec = fields.Boolean(
-        "Pec Server",
+        "Account PEC",
         help="Check if this server is PEC")
 
     user_ids = fields.Many2many(

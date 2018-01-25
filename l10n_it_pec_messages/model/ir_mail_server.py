@@ -24,7 +24,7 @@ class IrMailServer(models.Model):
         domain="[('pec', '=', True)]")
 
     pec = fields.Boolean(
-        "Pec Server",
+        "Account Pec",
         help="Check if this server is PEC")
 
     _sql_constraints = [
