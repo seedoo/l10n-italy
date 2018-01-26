@@ -22,6 +22,9 @@ class FetchmailServer(models.Model):
         "Account PEC",
         help="Check if this server is PEC")
 
+    pec_account_alias = fields.Many2one(
+            'mail.alias', 'Alias account PEC', domain=[('alias_name', '!=', False)])
+
     user_ids = fields.Many2many(
         'res.users',
         'fetchmail_server_user_rel', 'server_id', 'user_id',

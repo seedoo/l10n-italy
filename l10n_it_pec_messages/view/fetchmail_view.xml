@@ -10,6 +10,7 @@
         <field name="arch" type="xml">
             <field name="date" position="after" >
                 <field name="pec" />
+                <field name="pec_account_alias" attrs="{'required': [('pec','=',True)]}"/>
                 <field name="force_create_partner_from_mail" />
             </field>
             <field name="original" position="attributes">
