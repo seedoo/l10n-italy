@@ -31,7 +31,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:l10n_it_pec_messages.action_mail_pec
 #: model:ir.ui.menu,name:l10n_it_pec_messages.mail_pec
 msgid "Read PEC"
-msgstr ""
+msgstr "Leggi PEC"
 
 #. module: l10n_it_pec_messages
 #: field:mail.message,pec_type:0
@@ -181,12 +181,12 @@ msgstr "Il Messaggio PEC non contiene postacert.eml"
 #: model:ir.actions.act_window,name:l10n_it_pec_messages.action_out_mail_pec
 #: model:ir.ui.menu,name:l10n_it_pec_messages.menu_out_mail_pec
 msgid "Sent PEC"
-msgstr ""
+msgstr "Invia PEC"
 
 #. module: l10n_it_pec_messages
 #: model:ir.ui.menu,name:l10n_it_pec_messages.mail_write_pec
 msgid "Write PEC"
-msgstr ""
+msgstr "Scrivi PEC"
 
 #. module: l10n_it_pec_messages
 #: field:mail.message,pec_msg_parent_id:0
