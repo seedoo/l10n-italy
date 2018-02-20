@@ -50,9 +50,11 @@
             <field name="arch" type="xml">
                 <form string="Pec" create="false" edit="false" delete="false">
                     <group>
+                        <field name="direction" invisible="1"/>
                         <field name="email_from" readonly="1" />
                         <field name="date"  readonly="1" />
                         <field name="author_id"  />
+                        <field name="pec_server_user" attrs="{'invisible':[('direction','!=','in')]}"/>
                         <newline/>
                         <field name="subject" colspan="4" readonly="1" />
                         <field name="body" colspan="4" readonly="1" />
