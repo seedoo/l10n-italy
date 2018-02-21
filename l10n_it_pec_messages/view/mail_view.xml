@@ -51,7 +51,7 @@
                 <form string="Pec" create="false" edit="false" delete="false">
                     <header>
                         <button name="%(l10n_it_pec_messages.action_reply_pec_compose_message_wizard)d"
-                                    string="Reply" type="action" icon="terp-mail-message-new"
+                                    string="Rispondi" type="action" icon="terp-mail-message-new"
                                     context="{'default_partner_ids':author_id and [author_id] or [],'default_composition_mode':'reply','pec_messages': True}"/>
                         <field name="direction" invisible="1"/>
                     </header>
@@ -81,7 +81,7 @@
                                             <!--nolabel="1" readonly="1"-->
                                 <!--/>-->
                             <!--</page>-->
-                            <page string="Replies">
+                            <page string="Risposte">
                                 <field name="child_ids" nolabel="1"
                                  readonly="1"
                                  context = " {
