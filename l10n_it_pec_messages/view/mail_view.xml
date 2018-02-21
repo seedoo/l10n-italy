@@ -105,8 +105,8 @@
                     <field name="email_from" />
                     <field name="date" />
                     <field name="subject" />
-                    <field name="partner_ids" />
-                    <!--<field name="pec_server_user" string="Account"/>-->
+                    <!--<field name="partner_ids" />-->
+                    <field name="pec_server_user" string="Account"/>
                 </tree>
             </field>
         </record>

@@ -31,7 +31,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:l10n_it_pec_messages.action_mail_pec
 #: model:ir.ui.menu,name:l10n_it_pec_messages.mail_pec
 msgid "Read PEC"
-msgstr "Leggi"
+msgstr "Ricevute"
 
 #. module: l10n_it_pec_messages
 #: field:mail.message,pec_type:0
