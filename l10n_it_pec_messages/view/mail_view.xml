@@ -49,30 +49,38 @@
             <field name="priority">100</field>
             <field name="arch" type="xml">
                 <form string="Pec" create="false" edit="false" delete="false">
-                    <group>
-                        <field name="direction" invisible="1"/>
-                        <field name="email_from" readonly="1" />
-                        <field name="date"  readonly="1" />
-                        <field name="author_id"  />
-                        <field name="pec_server_user" attrs="{'invisible':[('direction','!=','in')]}"/>
-                        <newline/>
-                        <field name="subject" colspan="4" readonly="1" />
-                        <field name="body" colspan="4" readonly="1" />
-                        <newline/>
+                    <header>
                         <button name="%(l10n_it_pec_messages.action_reply_pec_compose_message_wizard)d"
-                                string="Reply" type="action" icon="terp-mail-message-new"
-                                context="{'default_partner_ids':author_id and [author_id] or [],'default_composition_mode':'reply','pec_messages': True}"/>
-                        <newline/>
-
+                                    string="Reply" type="action" icon="terp-mail-message-new"
+                                    context="{'default_partner_ids':author_id and [author_id] or [],'default_composition_mode':'reply','pec_messages': True}"/>
+                        <field name="direction" invisible="1"/>
+                    </header>
+                    <sheet>
+                        <div class="gedoc_header">
+                            <group col="4">
+                                <field name="pec_server_user" attrs="{'invisible':[('direction','!=','in')]}"/>
+                                <newline/>
+                                <field name="email_from" readonly="1" />
+                                <field name="date"  readonly="1" />
+                                <field name="author_id"  />
+                            </group>
+                        </div>
+                        <group>
+                            <field name="subject" colspan="4" readonly="1" />
+                            <field name="body" colspan="4" readonly="1" />
+                        </group>
                         <notebook colspan="6" >
-                            <page string="Recipients">
-                                <field name="partner_ids"
-                                            context = " {
-                                                  'tree_view_ref' : 'l10n_it_pec_messages.message_pec_partner_tree',
-                                                  'pec_messages': True}"
-                                            nolabel="1" readonly="1"
-                                />
+                            <page string="Attachment">
+                                <field name="attachment_ids" nolabel="1" readonly="1"/>
                             </page>
+                            <!--<page string="Recipients">-->
+                                <!--<field name="partner_ids"-->
+                                            <!--context = " {-->
+                                                  <!--'tree_view_ref' : 'l10n_it_pec_messages.message_pec_partner_tree',-->
+                                                  <!--'pec_messages': True}"-->
+                                            <!--nolabel="1" readonly="1"-->
+                                <!--/>-->
+                            <!--</page>-->
                             <page string="Replies">
                                 <field name="child_ids" nolabel="1"
                                  readonly="1"
@@ -82,11 +90,8 @@
                                                   'pec_messages': True}"
                                   />
                             </page>
-                            <page string="Attachment">
-                                <field name="attachment_ids" nolabel="1" readonly="1"/>
-                            </page>
                         </notebook>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
