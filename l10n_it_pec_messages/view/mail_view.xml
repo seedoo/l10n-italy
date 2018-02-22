@@ -56,7 +56,7 @@
                         <field name="direction" invisible="1"/>
                     </header>
                     <sheet>
-                        <div class="gedoc_header">
+                        <div class="message_header">
                             <group col="4">
                                 <field name="pec_server_user" attrs="{'invisible':[('direction','!=','in')]}"/>
                                 <newline/>
@@ -65,9 +65,11 @@
                                 <field name="author_id"  />
                             </group>
                         </div>
-                        <group>
+                        <group class="message_data">
                             <field name="subject" colspan="4" readonly="1" />
-                            <field name="body" colspan="4" readonly="1" />
+                            <group class="body-message-container">
+                                <field name="body" colspan="4" readonly="1" string="Corpo del messaggio"/>
+                            </group>
                         </group>
                         <notebook colspan="6" >
                             <page string="Attachment">
