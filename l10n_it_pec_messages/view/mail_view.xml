@@ -133,7 +133,7 @@
             <field name="search_view_id" ref="pec_message_search_view"/>
             <field name="domain">[
                   ('server_id.pec','=',True),('parent_id','=',False),('direction', '=', 'in'),
-                  ('pec_type','=','posta-certificata'),('server_id.user_ids','in',uid)]</field>
+                  ('pec_type','!=', False),('server_id.user_ids','in',uid)]</field>
             <field name="context">{
                 'pec_messages': True,
             }</field>
