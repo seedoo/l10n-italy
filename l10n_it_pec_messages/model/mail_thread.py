@@ -421,12 +421,25 @@ class MailThread(orm.Model):
                 subtype=subtype, parent_id=parent_id,
                 attachments=attachments, context=context,
                 content_subtype=content_subtype, **kwargs)
-        return super(MailThread, self).message_post(
+        msg_id = super(MailThread, self).message_post(
             cr, uid, thread_id, body=body,
             subject=subject, type=type,
             subtype=subtype, parent_id=parent_id,
             attachments=attachments, context=context,
             content_subtype=content_subtype, **kwargs)
+
+        msg_obj = self.pool.get('mail.message')
+        msg = msg_obj.browse(cr, uid, msg_id)
+
+        if msg.pec_type == 'posta-certificata':
+            vals = {}
+            if 'to' in kwargs and kwargs['to']:
+                vals = {'pec_to': kwargs['to']}
+            if 'cc' in kwargs and kwargs['cc']:
+                vals.update({'pec_cc': kwargs['cc']})
+            if len(vals):
+                msg_obj.write(cr, uid, msg_id, vals)
+        return msg_id
 
     def message_route(self, cr, uid, message, message_dict, model=None, thread_id=None,
                       custom_values=None, context=None):

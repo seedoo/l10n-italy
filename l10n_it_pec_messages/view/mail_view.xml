@@ -64,6 +64,9 @@
                                 <field name="email_from" readonly="1" />
                                 <field name="date"  readonly="1" />
                                 <field name="author_id"  />
+                                <field name="pec_to" colspan="4" readonly="1" />
+                                <newline/>
+                                <field name="pec_cc" colspan="4" readonly="1" />
                             </group>
                         </div>
                         <group class="message_data">

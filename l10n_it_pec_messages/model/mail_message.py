@@ -57,6 +57,8 @@ class MailMessage(orm.Model):
             ('preavviso-errore-consegna', 'Notice Delivery Error'),
             ('rilevazione-virus', 'Virus Detected'),
             ], 'Pec Type', readonly=True),
+        'pec_to': fields.text('A', readonly=True),
+        'pec_cc': fields.text('CC', readonly=True),
         'error': fields.boolean('Reception Delivery Error'),
         'err_type': fields.selection([
             ('nessuno', 'No Error'),
