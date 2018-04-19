@@ -240,9 +240,9 @@ class MailMessage(orm.Model):
         if context is None:
             context = {}
 
-        cr.execute('SELECT DISTINCT id, model, res_id, pec_msg_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
-        for id, rmod, rid, pec_msg_id in cr.fetchall():
-            if pec_msg_id:
+        cr.execute('SELECT DISTINCT id, model, res_id, server_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
+        for id, rmod, rid, server_id in cr.fetchall():
+            if server_id:
                 return super(orm.Model, self).check_access_rule(
                     cr, uid, ids, operation, context=context)
         return super(MailMessage, self).check_access_rule(
