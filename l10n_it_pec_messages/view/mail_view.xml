@@ -87,6 +87,9 @@
                                             <!--nolabel="1" readonly="1"-->
                                 <!--/>-->
                             <!--</page>-->
+                            <page string="Ricevute" attrs="{'invisible':[('direction','!=','in')]}">
+                                <field name="pec_notifications_ids"/>
+                            </page>
                             <page string="Risposte">
                                 <field name="child_ids" nolabel="1"
                                  readonly="1"
@@ -96,6 +99,7 @@
                                                   'pec_messages': True}"
                                  groups="base.group_pec_writer"/>
                             </page>
+
                         </notebook>
                     </sheet>
                 </form>
