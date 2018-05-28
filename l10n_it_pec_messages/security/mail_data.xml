@@ -1,15 +1,24 @@
 <?xml version="1.0"?>
 <openerp>
     <data noupdate="0">
+
+
+        <record model="ir.module.category" id="module_l10n_it_pec_messages">
+            <field name="name">PEC</field>
+            <field name="sequence">10</field>
+        </record>
+
         <record id="base.group_pec_reader" model="res.groups">
             <field name="name">Leggi PEC</field>
             <field name="comment">The user will have access to PEC mails</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="module_l10n_it_pec_messages"/>
         </record>
         <record id="base.group_pec_writer" model="res.groups">
             <field name="name">Invia PEC</field>
             <field name="comment">The user will have access to PEC mails</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="module_l10n_it_pec_messages"/>
         </record>
     </data>
 
