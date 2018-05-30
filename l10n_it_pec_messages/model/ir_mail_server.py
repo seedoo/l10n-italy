@@ -41,3 +41,12 @@ class IrMailServer(models.Model):
                                                  )
         return mail_server_ids
 
+    def send_email(self, cr, uid, message, mail_server_id=None, smtp_server=None, smtp_port=None, smtp_user=None,
+                   smtp_password=None, smtp_encryption=None, smtp_debug=False, context=None):
+        server = self.browse(cr, uid, mail_server_id)
+        if server.pec:
+            message['Return-Path'] = message.get('From')
+        return super(IrMailServer, self).send_email(cr, uid, message, mail_server_id, smtp_server, smtp_port,
+                                                      smtp_user, smtp_password, smtp_encryption, smtp_debug,
+                                                      context=context)
+
