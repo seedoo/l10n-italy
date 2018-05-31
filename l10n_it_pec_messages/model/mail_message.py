@@ -137,10 +137,6 @@ class MailMessage(orm.Model):
 
     }
 
-    _defaults = {
-        'direction': 'in'
-    }
-
     def CheckNotificationStatus(self, cr, uid, ids, context=None):
         mail_mail_pool = self.pool['mail.mail']
         if context is None:

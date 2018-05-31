@@ -270,6 +270,7 @@ class MailThread(orm.Model):
         if not self.is_server_pec(cr, uid, context=context):
             return super(MailThread, self).message_parse(
                 cr, uid, message, save_original=save_original, context=context)
+
         message_pool = self.pool['mail.message']
         msg_dict = {}
         daticert_dict = {}
@@ -292,6 +293,9 @@ class MailThread(orm.Model):
                 daticert_dict['pec_msg_id'] = message['Message-ID']
                 daticert_dict['err_type'] = 'no-dest'
                 daticert_dict['email_from'] = message['From']
+
+        daticert_dict['direction'] = "in"
+        daticert_dict['pec_state'] = "new"
 
         if daticert_dict.get('pec_type') == 'posta-certificata':
             if not postacert:

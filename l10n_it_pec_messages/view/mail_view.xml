@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-<data>
+    <data>
 
         <record model="ir.ui.view" id="view_message_form_pec">
             <field name="name">mail.message.form.pec</field>
             <field name="model">mail.message</field>
             <field name="inherit_id" ref="mail.view_message_form"/>
             <field name="arch" type="xml">
-                <field name="subtype_id" position="after" >
-                    <field name="ref_msg_id" />
-                    <field name="pec_msg_id" />
-                    <field name="pec_type" />
-                    <field name="direction" goups="base.group_erp_manager" />
+                <field name="body" position="before">
+                    <group string="Info PEC" col="4" attrs="{'invisible':[('server_id','=',False)]}" nolabel="1">
+                        <field name="server_id"/>
+                        <field name="out_server_id"/>
+                        <field name="cert_datetime"/>
+                        <field name="pec_type"/>
+                        <field name="direction"/>
+                        <field name="pec_msg_id"/>
+
+                        <field name="ref_msg_id"/>
+                        <field name="error"/>
+                        <field name="err_type"/>
+                        <field name="pec_server_user" attrs="{'invisible':[('direction','!=','in')]}"/>
+
+                        <field name="recipient_id"/>
+                        <field name="recipient_addr"/>
+                        <field name="pec_msg_parent_id"/>
+                        <field name="message_ok"/>
+                    </group>
                 </field>
-                <field name="body" position="replace" >
-                    <notebook>
-                        <page string="Body">
-                            <field name="body"/>
-                        </page>
-                        <page string="Server Notification Log Messages">
-                                <field name="pec_notifications_ids"/>
-                        </page>
-                    </notebook>
-                </field>
-                <field name="model" position="before" >
-                    <field name="server_id" />
-                    <field name="out_server_id" />
-                    <field name="error" />
+                <field name="email_from" position="after">
+                    <field name="pec_to" attrs="{'invisible':[('server_id','=',False)]}"/>
+                    <field name="pec_cc" attrs="{'invisible':[('server_id','=',False)]}"/>
                 </field>
             </field>
         </record>
@@ -36,9 +39,9 @@
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
                 <tree string="Pec">
-                    <field name="name" />
-                    <field name="phone" />
-                    <field name="pec_mail" />
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="pec_mail"/>
                 </tree>
             </field>
         </record>
@@ -51,9 +54,9 @@
                 <form string="Pec" create="false" edit="false" delete="false">
                     <header>
                         <button name="%(l10n_it_pec_messages.action_reply_pec_compose_message_wizard)d"
-                                    string="Rispondi" type="action" icon="terp-mail-message-new"
-                                    context="{'default_partner_ids':author_id and [author_id] or [],'default_composition_mode':'reply','pec_messages': True}"
-                                    groups="base.group_pec_writer"/>
+                                string="Rispondi" type="action" icon="terp-mail-message-new"
+                                context="{'default_partner_ids':author_id and [author_id] or [],'default_composition_mode':'reply','pec_messages': True}"
+                                groups="base.group_pec_writer"/>
                         <field name="direction" invisible="1"/>
                     </header>
                     <sheet>
@@ -61,43 +64,43 @@
                             <group col="4">
                                 <field name="pec_server_user" attrs="{'invisible':[('direction','!=','in')]}"/>
                                 <newline/>
-                                <field name="email_from" readonly="1" />
-                                <field name="date"  readonly="1" />
-                                <field name="author_id"  />
-                                <field name="pec_to" colspan="4" readonly="1" />
+                                <field name="email_from" readonly="1"/>
+                                <field name="date" readonly="1"/>
+                                <field name="author_id"/>
+                                <field name="pec_to" colspan="4" readonly="1"/>
                                 <newline/>
-                                <field name="pec_cc" colspan="4" readonly="1" />
+                                <field name="pec_cc" colspan="4" readonly="1"/>
                             </group>
                         </div>
                         <group class="message_data">
-                            <field name="subject" colspan="4" readonly="1" />
+                            <field name="subject" colspan="4" readonly="1"/>
                             <group class="body-message-container">
                                 <field name="body" colspan="4" readonly="1" string="Corpo del messaggio"/>
                             </group>
                         </group>
-                        <notebook colspan="6" >
+                        <notebook colspan="6">
                             <page string="Attachment">
                                 <field name="attachment_ids" nolabel="1" readonly="1"/>
                             </page>
                             <!--<page string="Recipients">-->
-                                <!--<field name="partner_ids"-->
-                                            <!--context = " {-->
-                                                  <!--'tree_view_ref' : 'l10n_it_pec_messages.message_pec_partner_tree',-->
-                                                  <!--'pec_messages': True}"-->
-                                            <!--nolabel="1" readonly="1"-->
-                                <!--/>-->
+                            <!--<field name="partner_ids"-->
+                            <!--context = " {-->
+                            <!--'tree_view_ref' : 'l10n_it_pec_messages.message_pec_partner_tree',-->
+                            <!--'pec_messages': True}"-->
+                            <!--nolabel="1" readonly="1"-->
+                            <!--/>-->
                             <!--</page>-->
                             <page string="Ricevute" attrs="{'invisible':[('direction','!=','in')]}">
                                 <field name="pec_notifications_ids"/>
                             </page>
                             <page string="Risposte">
                                 <field name="child_ids" nolabel="1"
-                                 readonly="1"
-                                 context = " {
+                                       readonly="1"
+                                       context=" {
                                                   'form_view_ref' : 'l10n_it_pec_messages.message_pec_form',
                                                   'tree_view_ref' : 'l10n_it_pec_messages.message_pec_tree',
                                                   'pec_messages': True}"
-                                 groups="base.group_pec_writer"/>
+                                       groups="base.group_pec_writer"/>
                             </page>
 
                         </notebook>
@@ -112,9 +115,9 @@
             <field name="priority">100</field>
             <field name="arch" type="xml">
                 <tree string="Pec" create="false" delete="false">
-                    <field name="email_from" />
-                    <field name="date" />
-                    <field name="subject" />
+                    <field name="email_from"/>
+                    <field name="date"/>
+                    <field name="subject"/>
                     <!--<field name="partner_ids" />-->
                     <field name="pec_server_user" string="Account"/>
                 </tree>
@@ -126,8 +129,8 @@
             <field name="model">mail.message</field>
             <field name="arch" type="xml">
                 <search string="Message">
-                   <field name="email_from" string="Pec address"/>
-                   <field name="date" string="Date"/>
+                    <field name="email_from" string="Pec address"/>
+                    <field name="date" string="Date"/>
                 </search>
             </field>
         </record>
@@ -139,11 +142,13 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="pec_message_search_view"/>
             <field name="domain">[
-                  ('server_id.pec','=',True),('parent_id','=',False),('direction', '=', 'in'),
-                  ('pec_type','!=', False),('server_id.user_ids','in',uid)]</field>
+                ('server_id.pec','=',True),('parent_id','=',False),('direction', '=', 'in'),
+                ('pec_type','!=', False),('server_id.user_ids','in',uid)]
+            </field>
             <field name="context">{
                 'pec_messages': True,
-            }</field>
+                }
+            </field>
         </record>
 
         <record model='ir.actions.act_window' id='action_out_mail_pec'>
@@ -153,13 +158,15 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="pec_message_search_view"/>
             <field name="domain">[
-                  ('server_id.pec','=',True),
-                  ('pec_type','=','posta-certificata'),
-                  ('direction', '=', 'out'),
-                  ('server_id.user_ids','in',uid)]</field>
+                ('server_id.pec','=',True),
+                ('pec_type','=','posta-certificata'),
+                ('direction', '=', 'out'),
+                ('server_id.user_ids','in',uid)]
+            </field>
             <field name="context">{
                 'pec_messages': True,
-            }</field>
+                }
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="message_pec_act_tree">
@@ -217,5 +224,5 @@
             <field name="groups_id" eval="[(4, ref('base.group_pec_writer'))]"/>
         </record>
 
-</data>
+    </data>
 </openerp>
