@@ -466,6 +466,8 @@ class MailThread(orm.Model):
                         for pec_fetchmail_server in pec_fetchmail_servers:
                             if fetchmail_server.id == pec_fetchmail_server.id:
                                 new_res.append(route)
+                    else:
+                        new_res.append(route)
                 return new_res
         return res
 
