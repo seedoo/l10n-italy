@@ -303,7 +303,7 @@ msgstr "Messaggio di Accettazione"
 #. module: l10n_it_pec_messages
 #: view:res.users:0
 msgid "Fetchmail servers"
-msgstr "Elenco Server in cui sei abilitato"
+msgstr "Account PEC"
 
 #. module: l10n_it_pec_messages
 #: field:fetchmail.server,out_server_id:0
