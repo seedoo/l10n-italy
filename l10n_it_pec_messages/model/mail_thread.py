@@ -299,14 +299,10 @@ class MailThread(orm.Model):
 
         if daticert_dict.get('pec_type') == 'posta-certificata':
             if not postacert:
-                raise orm.except_orm(
-                    _('Error'),
-                    _('PEC message does not contain postacert.eml'))
-            msg_dict = super(MailThread, self).message_parse(
-                cr, uid, postacert, save_original=False,
-                context=context)
-            msg_dict['attachments'] += [
-                ('original_email.eml', message.as_string())]
+                raise orm.except_orm(_('Error'), _('PEC message does not contain postacert.eml'))
+            #msg_dict = super(MailThread, self).message_parse(cr, uid, postacert, save_original=False, context=context)
+            #msg_dict['attachments'] += [('original_email.eml', message.as_string())]
+            msg_dict = super(MailThread, self).message_parse(cr, uid, postacert, True, context=context)
         else:
             msg_dict = super(MailThread, self).message_parse(
                 cr, uid, message, save_original=True,
