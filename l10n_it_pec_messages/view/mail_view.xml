@@ -90,7 +90,7 @@
                             <!--nolabel="1" readonly="1"-->
                             <!--/>-->
                             <!--</page>-->
-                            <page string="Ricevute" attrs="{'invisible':[('direction','!=','in')]}">
+                            <page string="Ricevute" attrs="{'invisible':[('direction','!=','out')]}">
                                 <field name="pec_notifications_ids"/>
                             </page>
                             <page string="Risposte">
