@@ -4,6 +4,15 @@
         <record model="res.users" id="base.user_root">
             <field name="groups_id" eval="[(4, ref('base.group_pec_reader')), (4, ref('base.group_pec_writer'))]"/>
         </record>
+
+        <record model="mail.alias" id="pec_user_alias">
+            <field name="alias_name">flosslabtest</field>
+            <field name="alias_contact">partners</field>
+            <field name="alias_user_id" eval="int(1)"></field>
+            <field name="alias_force_thread_id" eval="int(1)"></field>
+            <field model="ir.model" name="alias_model_id" search="[('model','ilike','res.users')]"/>
+        </record>
+
         <record model="fetchmail.server" id="imap_pec_server">
             <field name="name">flosslabtest@legalmail.it</field>
             <field name="type">imap</field>
@@ -13,6 +22,7 @@
             <field name="password">test12345</field>
             <field name="is_ssl" eval="True"></field>
             <field name="pec" eval="True"></field>
+            <field name="pec_account_alias" ref="l10n_it_pec_messages.pec_user_alias"></field>
             <field name="user_ids" eval="[(6, 0,[ref('base.user_root')])]"></field>
         </record>
         <record model="ir.mail_server" id="smtp_pec_server">
@@ -24,14 +34,6 @@
             <field name="smtp_encryption">ssl</field>
             <field name="pec" eval="True"></field>
             <field name="in_server_id" ref="imap_pec_server"></field>
-        </record>
-
-        <record model="mail.alias" id="pec_user_alias">
-            <field name="alias_name">flosslabtest</field>
-            <field name="alias_contact">partners</field>
-            <field name="alias_user_id" eval="int(1)"></field>
-            <field name="alias_force_thread_id" eval="int(1)"></field>
-            <field model="ir.model" name="alias_model_id" search="[('model','ilike','res.users')]"/>
         </record>
 
         <record model="ir.cron" id="fetchmail.ir_cron_mail_gateway_action">
