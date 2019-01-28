@@ -317,30 +317,34 @@ class MailThread(orm.Model):
             msg_ids = message_pool.search(cr, SUPERUSER_ID, [('message_id', '=', daticert_dict['message_id']),('direction', '=', 'out')], context=context)
             if len(msg_ids) > 1:
                 raise orm.except_orm( _('Error'), _('Too many existing mails with message_id %s') % daticert_dict['message_id'])
+            # I'm going to set this message as notification of the original
+            # message and remove the message_id of this message
+            # (it would be duplicated)
+            # before deletion check if this message is prensent and linked
+            # with main massage id, if false remove message_id else no
             if msg_ids:
-                # I'm going to set this message as notification of the original
-                # message and remove the message_id of this message
-                # (it would be duplicated)
-                # before deletion check if this message is prensent and linked
-                # with main massage id, if false remove message_id else no
                 msg_dict['pec_msg_parent_id'] = msg_ids[0]
-                domain = [
-                    ('pec_msg_id', '=', daticert_dict['pec_msg_id']),
-                    ('pec_type', '=', daticert_dict.get('pec_type'))
-                ]
-                # if daticert_dict has a recipient_addr than we have to
-                # add a domain condition so that we can ignore only
-                # notification message that are already present in the system
-                if daticert_dict.get('recipient_addr'):
-                    domain.append(('recipient_addr',
-                                   '=',
-                                   daticert_dict.get('recipient_addr'))
-                                  )
-                chk_msgids = message_pool.search(cr, uid, domain, context=context)
-                if not chk_msgids:
+
+            domain = [
+                ('pec_msg_id', '=', daticert_dict['pec_msg_id']),
+                ('pec_type', '=', daticert_dict.get('pec_type'))
+            ]
+            # if daticert_dict has a recipient_addr than we have to
+            # add a domain condition so that we can ignore only
+            # notification message that are already present in the system
+            if daticert_dict.get('recipient_addr'):
+                domain.append(('recipient_addr', '=', daticert_dict.get('recipient_addr')))
+
+            chk_msgids = message_pool.search(cr, uid, domain, context=context)
+            if not chk_msgids:
+                if msg_ids:
                     context['main_message_id'] = msg_ids[0]
                     context['pec_type'] = daticert_dict.get('pec_type')
-                    del msg_dict['message_id']
+                del msg_dict['message_id']
+            else:
+                chk_msg = message_pool.browse(cr, uid, chk_msgids[0], context=context)
+                msg_dict['message_id'] = chk_msg.message_id
+
         # if message transport resend original mail with
         # transport error , marks in original message with
         # error, and after the server not save the original message
