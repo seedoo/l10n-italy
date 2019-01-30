@@ -98,6 +98,7 @@ class MailMail(orm.Model):
                         cr, uid, mail.id,
                         {
                             'email_to': address_lst,
+                            'pec_to':  address_lst,
                             'recipient_ids': [
                                 (3, pid) for pid in recipient_ids]
                         },
