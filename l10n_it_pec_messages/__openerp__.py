@@ -24,7 +24,7 @@
 
 {
     "name": "Pec Messages",
-    "version": "8.0.1.8.2",
+    "version": "8.0.1.8.3",
     "author": "Agile Business Group, Odoo Community Association (OCA) - Innoviu Srl - Flosslab Srl",
     "category": "Certified Mailing",
     "website": "http://www.agilebg.com - http://www.innoviu.com - http://www.flosslab.com",
