@@ -303,14 +303,18 @@ class MailThread(orm.Model):
             #msg_dict = super(MailThread, self).message_parse(cr, uid, postacert, save_original=False, context=context)
             #msg_dict['attachments'] += [('original_email.eml', message.as_string())]
             msg_dict = super(MailThread, self).message_parse(cr, uid, postacert, True, context=context)
+            msg_dict.update(daticert_dict)
         else:
             msg_dict = super(MailThread, self).message_parse(
                 cr, uid, message, save_original=True,
                 context=context)
+            email_from_daticert = daticert_dict['email_from']
+            daticert_dict['email_from'] = msg_dict['email_from'] if 'email_from' in msg_dict else email_from_daticert
             if daticert_dict.get('pec_type') in ('avvenuta-consegna', 'errore-consegna'):
                 msg_dict['body'], attachs = self._message_extract_payload_receipt(message, save_original=save_original)
+            msg_dict.update(daticert_dict)
+            daticert_dict['email_from'] = email_from_daticert
 
-        msg_dict.update(daticert_dict)
         msg_ids = []
 
         if (daticert_dict.get('message_id') and (daticert_dict.get('pec_type') != 'posta-certificata')):
@@ -435,7 +439,7 @@ class MailThread(orm.Model):
         msg_obj = self.pool.get('mail.message')
         msg = msg_obj.browse(cr, uid, msg_id)
 
-        if msg.pec_type == 'posta-certificata':
+        if msg.pec_type:
             vals = {}
             if 'to' in kwargs and kwargs['to']:
                 vals = {'pec_to': kwargs['to']}
