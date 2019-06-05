@@ -264,12 +264,13 @@ class MailThread(orm.Model):
 
         if context is None:
             context = {}
-        context['main_message_id'] = False
-        context['pec_type'] = False
+        new_context = dict(context or {})
+        new_context['main_message_id'] = False
+        new_context['pec_type'] = False
 
-        if not self.is_server_pec(cr, uid, context=context):
+        if not self.is_server_pec(cr, uid, context=new_context):
             return super(MailThread, self).message_parse(
-                cr, uid, message, save_original=save_original, context=context)
+                cr, uid, message, save_original=save_original, context=new_context)
 
         message_pool = self.pool['mail.message']
         msg_dict = {}
