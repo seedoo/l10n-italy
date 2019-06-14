@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page string="Fetchmail servers">
-                    <field name="allowed_server_ids"  />
+                    <field name="allowed_server_ids" domain="[('pec','=',True)]"/>
                 </page>
             </notebook>
         </field>
