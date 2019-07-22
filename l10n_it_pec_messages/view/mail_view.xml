@@ -177,7 +177,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="pec_message_search_view"/>
             <field name="domain">[
-                ('server_id.pec','=',True),('parent_id','=',False),('direction', '=', 'in'),
+                ('parent_id','=',False),('direction', '=', 'in'),
                 ('pec_type','!=', False),('server_id.user_ids','in',uid)]
             </field>
             <field name="context">{
