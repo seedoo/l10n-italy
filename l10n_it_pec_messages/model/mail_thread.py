@@ -66,6 +66,12 @@ class MailThread(orm.Model):
                 for child2 in child:
                     if child2.tag == 'mittente':
                         msg_dict['email_from'] = child2.text
+                    if msg_dict['pec_type'] == 'non-accettazione' and child2.tag == 'destinatari' and 'invalid' not in child2.text:
+                        recipient_id = self._FindPartnersPec(
+                            cr, uid, message, child2.text, context=context)
+                        if recipient_id:
+                            msg_dict['recipient_id'] = recipient_id
+                        msg_dict['recipient_addr'] = child2.text
             if child.tag == 'dati':
                 for child2 in child:
                     if child2.tag == 'msgid':
@@ -311,7 +317,9 @@ class MailThread(orm.Model):
                 context=context)
             email_from_daticert = daticert_dict['email_from']
             daticert_dict['email_from'] = msg_dict['email_from'] if 'email_from' in msg_dict else email_from_daticert
-            if daticert_dict.get('pec_type') in ('avvenuta-consegna', 'errore-consegna'):
+            if daticert_dict.get('pec_type') in 'non-accettazione':
+                daticert_dict['err_type'] = 'no-dest'
+            if daticert_dict.get('pec_type') in ('avvenuta-consegna', 'errore-consegna', 'non-accettazione'):
                 msg_dict['body'], attachs = self._message_extract_payload_receipt(message, save_original=save_original)
             msg_dict.update(daticert_dict)
             daticert_dict['email_from'] = email_from_daticert
