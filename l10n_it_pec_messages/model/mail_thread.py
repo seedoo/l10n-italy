@@ -66,12 +66,6 @@ class MailThread(orm.Model):
                 for child2 in child:
                     if child2.tag == 'mittente':
                         msg_dict['email_from'] = child2.text
-                    if msg_dict['pec_type'] == 'non-accettazione' and child2.tag == 'destinatari' and 'invalid' not in child2.text:
-                        recipient_id = self._FindPartnersPec(
-                            cr, uid, message, child2.text, context=context)
-                        if recipient_id:
-                            msg_dict['recipient_id'] = recipient_id
-                        msg_dict['recipient_addr'] = child2.text
             if child.tag == 'dati':
                 for child2 in child:
                     if child2.tag == 'msgid':
@@ -317,7 +311,7 @@ class MailThread(orm.Model):
                 context=context)
             email_from_daticert = daticert_dict['email_from']
             daticert_dict['email_from'] = msg_dict['email_from'] if 'email_from' in msg_dict else email_from_daticert
-            if daticert_dict.get('pec_type') in 'non-accettazione':
+            if daticert_dict.get('pec_type') in ['non-accettazione']:
                 daticert_dict['err_type'] = 'no-dest'
             if daticert_dict.get('pec_type') in ('avvenuta-consegna', 'errore-consegna', 'non-accettazione'):
                 msg_dict['body'], attachs = self._message_extract_payload_receipt(message, save_original=save_original)
@@ -458,36 +452,40 @@ class MailThread(orm.Model):
                 msg_obj.write(cr, uid, msg_id, vals)
         return msg_id
 
-    def message_route(self, cr, uid, message, message_dict, model=None, thread_id=None,
-                      custom_values=None, context=None):
-        self.fix_headers_legalmail_bounces(message)
-        res = super(MailThread, self).message_route(cr, uid, message, message_dict, model, thread_id, custom_values, context)
+    def message_route(self, cr, uid, message, message_dict, model=None, thread_id=None, custom_values=None, context=None):
+        fetchmail_server = None
         if context and context.has_key('fetchmail_server_id') and context['fetchmail_server_id']:
             fetchmail_server_obj = self.pool.get('fetchmail.server')
             fetchmail_server = fetchmail_server_obj.browse(cr, uid, context['fetchmail_server_id'])
-            if fetchmail_server.pec:
-                new_res = []
-                for route in res:
-                    mail_alias = None
-                    if route[4]:
-                        mail_alias = route[4]
-                    if mail_alias and mail_alias.id:
-                        fetchmail_server_ids = fetchmail_server_obj.search(cr, uid, [
-                            ('pec_account_alias', '=', mail_alias.id)
-                        ], context=context)
-                        pec_fetchmail_servers = fetchmail_server_obj.browse(cr, uid, fetchmail_server_ids)
-                        for pec_fetchmail_server in pec_fetchmail_servers:
-                            if fetchmail_server.id == pec_fetchmail_server.id:
-                                new_res.append(route)
-                    else:
-                        new_res.append(route)
-                return new_res
+
+        if fetchmail_server and fetchmail_server.pec:
+            self.fix_pec_headers_bounces(message)
+
+        res = super(MailThread, self).message_route(cr, uid, message, message_dict, model, thread_id, custom_values, context)
+
+        if fetchmail_server and fetchmail_server.pec:
+            new_res = []
+            for route in res:
+                mail_alias = None
+                if route[4]:
+                    mail_alias = route[4]
+                if mail_alias and mail_alias.id:
+                    fetchmail_server_ids = fetchmail_server_obj.search(cr, uid, [
+                        ('pec_account_alias', '=', mail_alias.id)
+                    ], context=context)
+                    pec_fetchmail_servers = fetchmail_server_obj.browse(cr, uid, fetchmail_server_ids)
+                    for pec_fetchmail_server in pec_fetchmail_servers:
+                        if fetchmail_server.id == pec_fetchmail_server.id:
+                            new_res.append(route)
+                else:
+                    new_res.append(route)
+            return new_res
         return res
 
     # modifica due campi nelle notifiche di errore dei server di legalmail che diversamente verrebbero scartate dal sistema
-    def fix_headers_legalmail_bounces(self, message):
+    def fix_pec_headers_bounces(self, message):
         email_from = decode_header(message, 'From')
-        if email_from.__contains__("mailer-daemon@legalmail.it"):
+        if (email_from and email_from.lower().__contains__('mailer-daemon@')) or message.get_content_type()=='multipart/report':
             fake_from = ('From', message['From'].replace('mailer-daemon', 'mailerdaemon'))
             fake_content_type = ('Content-Type',message['Content-Type'].replace('Report', 'Mixed'))
             message._headers = [i for i in message._headers if not i[0] == 'From' and not i[0] == 'Content-Type']
