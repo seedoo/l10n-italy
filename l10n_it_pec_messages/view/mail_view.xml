@@ -46,7 +46,7 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='message_pec_form'>
+        <record id="message_pec_form" model="ir.ui.view">
             <field name="name">message.pec.form</field>
             <field name="model">mail.message</field>
             <field name="priority">100</field>
@@ -63,12 +63,12 @@
                         <div class="message_header">
                             <group col="4">
                                 <field name="pec_server_user" attrs="{'invisible':[('direction','!=','in')]}"/>
+                                <field name="date" readonly="1"/>
+                                <field name="author_id" string="Contatto Rubrica"/>
                                 <newline/>
                                 <field name="email_from" readonly="1"/>
-                                <field name="date" readonly="1"/>
-                                <field name="author_id"/>
-                                <field name="pec_to" colspan="4" readonly="1"/>
                                 <newline/>
+                                <field name="pec_to" colspan="4" readonly="1"/>
                                 <field name="pec_cc" colspan="4" readonly="1"/>
                             </group>
                         </div>
