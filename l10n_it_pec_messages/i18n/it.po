@@ -149,7 +149,7 @@ msgstr "Utenti PEC Server"
 #. module: l10n_it_pec_messages
 #: field:res.users,allowed_server_ids:0
 msgid "Fetchmail servers allowed to be used"
-msgstr "Fetchmail servers abilitato per essere usato"
+msgstr "Account PEC"
 
 #. module: l10n_it_pec_messages
 #: field:fetchmail.server,pec:0 field:ir.mail_server,pec:0

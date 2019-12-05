@@ -1,19 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-<data>
+    <data>
 
-    <record model="ir.ui.view" id="view_user_form_pec">
-        <field name="name">res.users.form.pec</field>
-        <field name="model">res.users</field>
-        <field name="inherit_id" ref="base.view_users_form"/>
-        <field name="arch" type="xml">
-            <notebook position="inside">
-                <page string="Fetchmail servers">
-                    <field name="allowed_server_ids" domain="[('pec','=',True)]"/>
-                </page>
-            </notebook>
-        </field>
-    </record>
+        <record id="view_email_server_tree_pec" model="ir.ui.view">
+            <field name="name">fetchmail.server.tree.pec</field>
+            <field name="model">fetchmail.server</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="is_ssl"/>
+                    <field name="date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
 
-</data>
+        <record id="view_email_server_form_pec" model="ir.ui.view">
+            <field name="name">fetchmail.server.form.pec</field>
+            <field name="model">fetchmail.server</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="type" readonly="1"/>
+                        <field name="is_ssl" readonly="1"/>
+                        <field name="date" readonly="1"/>
+                        <field name="state" readonly="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_user_form_pec">
+            <field name="name">res.users.form.pec</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Fetchmail servers">
+                        <field name="allowed_server_ids"
+                               domain="[('pec','=',True)]"
+                               options="{'no_create': True}"
+                               context="{'tree_view_ref': 'l10n_it_pec_messages.view_email_server_tree_pec', 'form_view_ref': 'l10n_it_pec_messages.view_email_server_form_pec'}"
+                        />
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
 </openerp>
