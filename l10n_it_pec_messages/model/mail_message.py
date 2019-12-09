@@ -57,8 +57,8 @@ class MailMessage(orm.Model):
             ('preavviso-errore-consegna', 'Notice Delivery Error'),
             ('rilevazione-virus', 'Virus Detected'),
             ], 'Pec Type', readonly=True),
-        'pec_to': fields.text('A', readonly=True),
-        'pec_cc': fields.text('CC', readonly=True),
+        'pec_to': fields.text('A (PEC)', readonly=True),
+        'pec_cc': fields.text('CC (PEC)', readonly=True),
         'error': fields.boolean('Reception Delivery Error'),
         'err_type': fields.selection([
             ('nessuno', 'No Error'),
@@ -133,7 +133,7 @@ class MailMessage(orm.Model):
         'main_msg_virus_message_ids': fields.one2many(
             'mail.message', 'virus_message_id',
             'Main messages', readonly=True),
-        'pec_server_user': fields.related('server_id', 'user', type='char', readonly=True, string='Account'),
+        'pec_server_user': fields.related('server_id', 'user', type='char', readonly=True, string='Account (PEC)'),
 
     }
 
