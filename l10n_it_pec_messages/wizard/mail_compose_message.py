@@ -21,12 +21,11 @@ class MailComposeMessage(osv.TransientModel):
 
     def _get_def_server(self, cr, uid, context=None):
         res = self.pool.get('fetchmail.server').search(
-            cr, uid, [('user_ids', 'in', uid), ('pec', '=', True)], context=context)
+            cr, uid, [('user_ids', 'in', uid), ('pec', '=', True), ('state','=','done')], context=context)
         return res and res[0] or False
 
     _columns = {
-        'server_id': fields.many2one(
-            'fetchmail.server', 'Server', domain="[('pec', '=', True),('user_ids', 'in', uid)]", required=True),
+        'server_id': fields.many2one('fetchmail.server', 'Server', domain="[('pec', '=', True),('user_ids', 'in', uid),('state','=','done')]"),
     }
     _defaults = {
         'server_id': _get_def_server,
