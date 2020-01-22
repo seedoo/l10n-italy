@@ -62,7 +62,7 @@
                     <sheet>
                         <div class="message_header">
                             <group col="4">
-                                <field name="pec_server_user" attrs="{'invisible':[('direction','!=','in')]}" string="Account"/>
+                                <field name="pec_server_user" string="Account"/>
                                 <field name="date" readonly="1"/>
                                 <field name="author_id" string="Contatto Rubrica"/>
                                 <newline/>
