@@ -154,6 +154,7 @@
                     <field name="pec_cc" string="CC"/>
                     <field name="subject" string="Oggetto"/>
                     <field name="body" string="Contenuto"/>
+                    <field name="server_id" string="Account"/>
                     <field name="pec_msg_id" string="PEC Id"/>
                     <field name="date"
                            filter_domain="[('date','&gt;=',self)]"
