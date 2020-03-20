@@ -23,7 +23,7 @@
         </record>
 
         <record id="base.group_pec_writer" model="res.groups">
-            <field name="name">Invia PEC</field>
+            <field name="name">Invia PEC (BETA)</field>
             <field name="comment">The user will have access to PEC mails</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="category_id" ref="module_l10n_it_pec_messages"/>
