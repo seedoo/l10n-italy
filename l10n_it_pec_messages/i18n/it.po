@@ -186,7 +186,7 @@ msgstr "Inviate"
 #. module: l10n_it_pec_messages
 #: model:ir.ui.menu,name:l10n_it_pec_messages.mail_write_pec
 msgid "Write PEC"
-msgstr "Scrivi (BETA)"
+msgstr "Scrivi"
 
 #. module: l10n_it_pec_messages
 #: field:mail.message,pec_msg_parent_id:0
