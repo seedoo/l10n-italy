@@ -313,7 +313,7 @@ class MailThread(orm.Model):
             daticert_dict['email_from'] = msg_dict['email_from'] if 'email_from' in msg_dict else email_from_daticert
             if daticert_dict.get('pec_type') in ['non-accettazione']:
                 daticert_dict['err_type'] = 'no-dest'
-            if daticert_dict.get('pec_type') in ('avvenuta-consegna', 'errore-consegna', 'non-accettazione'):
+            if daticert_dict.get('pec_type') in ('avvenuta-consegna', 'errore-consegna', 'non-accettazione', 'preavviso-errore-consegna'):
                 msg_dict['body'], attachs = self._message_extract_payload_receipt(message, save_original=save_original)
             msg_dict.update(daticert_dict)
             daticert_dict['email_from'] = email_from_daticert
@@ -321,7 +321,13 @@ class MailThread(orm.Model):
         msg_ids = []
 
         if (daticert_dict.get('message_id') and (daticert_dict.get('pec_type') != 'posta-certificata')):
-            msg_ids = message_pool.search(cr, SUPERUSER_ID, [('message_id', '=', daticert_dict['message_id']),('direction', '=', 'out')], context=context)
+            message_id_to_search = daticert_dict['message_id']
+            # nel caso di una pec di tipo preavviso-errore-consegna il message_id di odoo viene ripulito dai caratteri
+            # < e >, quindi per trovare il messaggio principale è necessario aggiungerli nell'id di ricerca
+            if not msg_ids and daticert_dict.get('pec_type') == 'preavviso-errore-consegna' and not message_id_to_search.startswith('<'):
+                message_id_to_search = '<' + message_id_to_search + '>'
+            msg_ids = message_pool.search(cr, SUPERUSER_ID, [('message_id', '=', message_id_to_search),('direction', '=', 'out')], context=context)
+
             if len(msg_ids) > 1:
                 raise orm.except_orm( _('Error'), _('Too many existing mails with message_id %s') % daticert_dict['message_id'])
             # I'm going to set this message as notification of the original
