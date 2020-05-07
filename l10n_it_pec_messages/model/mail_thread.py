@@ -19,6 +19,9 @@ from openerp import api, tools
 from openerp.tools.translate import _
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 def decode_header(message, header, separator=' '):
@@ -381,6 +384,20 @@ class MailThread(orm.Model):
         if author_id:
             msg_dict['author_id'] = author_id
         msg_dict['server_id'] = context.get('fetchmail_server_id')
+
+        # Si aggiunge al context il valore pec_msg_id recuperato dal file daticert.xml. Questo valore servirà nella
+        # search eseguita nel metodo message_process della classe mail_thread di ocb per risolvere la problematica
+        # introdotta da un possibile bug nel parsing del file daticert.xml: il tag msgid viene mappato con il campo
+        # message_id mentre il tag identificativo viene mappato con il campo pec_msg_id. In realtà deve essere il
+        # contrario, in base a quanto letto nella documentazione che descrive il contenuto del file daticert.xml.
+        # Il valore aggiunto nel context servirà nel metodo _search esteso nella classe mail_message di questo stesso
+        # modulo, in modo da evitare di trovare duplicati per via dello scambio di id.
+        # In fase di refactoring del modulo questa parte dovrà essere tolta solo se viene gestito in maniera corretta
+        # il mapping fra tag i campi.
+        try:
+            context['pec_msg_id'] = daticert_dict.get('pec_msg_id', False)
+        except Exception as exeption:
+            _logger.error("Error updating context with pec_msg_id %s: %s", daticert_dict.get('pec_msg_id', False), str(exeption))
 
         return msg_dict
 

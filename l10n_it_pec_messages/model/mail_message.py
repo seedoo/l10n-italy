@@ -214,6 +214,15 @@ class MailMessage(orm.Model):
             fetchmail_server = fetchmail_server_obj.browse(cr, uid, context['fetchmail_server_id'])
             if fetchmail_server.pec:
                 args.append(('server_id', '=', context['fetchmail_server_id']))
+        # Si controlla se nel context è presente il valore relativo alla chiave pec_msg_id in modo da aggirare il
+        # problema dovuto al bug in fase di parsing del daticert.xml: il tag msgid viene mappato con il campo message_id
+        # mentre il tag identificativo viene mappato con il campo pec_msg_id. In realtà deve essere il contrario, in
+        # base a quanto letto nella documentazione che descrive il contenuto del file daticert.xml.
+        # In fase di refactoring del modulo questa parte dovrà essere tolta solo se viene gestito in maniera corretta
+        # il mapping fra tag i campi.
+        if context and context.has_key('pec_msg_id') and context['pec_msg_id']:
+            args.append(('pec_msg_id', '=', context['pec_msg_id']))
+            del context['pec_msg_id']
         if context.get('pec_messages'):
             return super(orm.Model, self)._search(
                 cr, uid, args, offset=offset, limit=limit, order=order,
