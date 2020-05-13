@@ -318,6 +318,8 @@ class MailThread(orm.Model):
                 daticert_dict['err_type'] = 'no-dest'
             if daticert_dict.get('pec_type') in ('avvenuta-consegna', 'errore-consegna', 'non-accettazione', 'preavviso-errore-consegna'):
                 msg_dict['body'], attachs = self._message_extract_payload_receipt(message, save_original=save_original)
+            # Per le pec con tipologia diversa da posta-certificata il campo pec_state deve essere vuoto
+            daticert_dict['pec_state'] = False
             msg_dict.update(daticert_dict)
             daticert_dict['email_from'] = email_from_daticert
 
