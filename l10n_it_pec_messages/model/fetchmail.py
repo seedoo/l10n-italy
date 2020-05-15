@@ -43,6 +43,8 @@ class FetchmailServer(models.Model):
              " to link a fetched mail with,"
              "the system creates a contact partner")
 
+    associate_pec_by_other_alias = fields.Boolean("Associa le PEC tramite altri alias", default=False)
+
     def get_fetch_server_pec(self, cr, uid, context=None):
         server_ids = self.search(cr, uid, [('user_ids', '=', uid)])
         return server_ids

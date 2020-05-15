@@ -11,6 +11,8 @@
             <field name="date" position="after" >
                 <field name="pec" />
                 <field name="pec_account_alias" attrs="{'required': [('pec','=',True)]}"/>
+                <field name="associate_pec_by_other_alias" attrs="{'invisible': [('pec','!=',True)]}"/>
+                <newline/>
                 <field name="force_create_partner_from_mail" />
             </field>
             <field name="original" position="attributes">

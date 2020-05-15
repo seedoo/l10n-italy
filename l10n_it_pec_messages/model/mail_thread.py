@@ -495,13 +495,18 @@ class MailThread(orm.Model):
                 if route[4]:
                     mail_alias = route[4]
                 if mail_alias and mail_alias.id:
-                    fetchmail_server_ids = fetchmail_server_obj.search(cr, uid, [
-                        ('pec_account_alias', '=', mail_alias.id)
-                    ], context=context)
-                    pec_fetchmail_servers = fetchmail_server_obj.browse(cr, uid, fetchmail_server_ids)
-                    for pec_fetchmail_server in pec_fetchmail_servers:
-                        if fetchmail_server.id == pec_fetchmail_server.id:
+                    # caso 1: mail alias associato al fetchmail server che sta facendo il fetch
+                    if fetchmail_server.pec_account_alias and fetchmail_server.pec_account_alias.id == mail_alias.id:
+                        new_res.append(route)
+                        break
+                    # caso 2: mail alias associato a nessun fetchmail server
+                    if fetchmail_server.associate_pec_by_other_alias:
+                        fetchmail_server_ids = fetchmail_server_obj.search(cr, uid, [
+                            ('pec_account_alias', '=', mail_alias.id)
+                        ], context=context)
+                        if not fetchmail_server_ids:
                             new_res.append(route)
+                            break
                 else:
                     new_res.append(route)
             return new_res
